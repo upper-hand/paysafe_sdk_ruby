@@ -32,6 +32,7 @@ module Paysafe
       attr_accessor :settlements
       attr_accessor :error
       attr_accessor :links
+      attr_accessor :storedCredential
 
       def self.get_pageable_array_key
         "auths"
