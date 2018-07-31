@@ -31,7 +31,7 @@ module Paysafe
     def createMerchantAccount merchantAccount
       request = Request.new(
       method: Request::POST,
-      uri: prepare_uri("/merchants/#{merchantAccount.merchantId}/accounts"),#?operationMode=consolidated
+      uri: prepare_uri("/merchants/#{merchantAccount.merchantId}/accounts"),
       body: merchantAccount.get(
         required = [
           'name',
@@ -70,7 +70,7 @@ module Paysafe
     def createBusinessOwner businessOwner
       request = Request.new(
       method: Request::POST,
-      uri: prepare_uri("/accounts/#{businessOwner.accountId}/businessowners"),#?operationMode=consolidated
+      uri: prepare_uri("/accounts/#{businessOwner.accountId}/businessowners"),
       body: businessOwner.get(
         required = [
           'firstName',
