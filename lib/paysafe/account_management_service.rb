@@ -7,21 +7,22 @@ module Paysafe
 
     def available?
       request = Request.new(
-      method: Request::GET,
-      uri: "/accountmanagement/monitor",
+        method: Request::GET,
+        uri: "/accountmanagement/monitor",
       )
 
       response = @client.process_request request
-      return response.status == "READY"
+
+      response.status == "READY"
     end
 
     def createMerchantEntity merchantEntity
       request = Request.new(
-      method: Request::POST,
-      uri: prepare_uri("/merchants"),
-      body: merchantEntity.get(
-        required = ['name']
-      )
+        method: Request::POST,
+        uri: prepare_uri("/merchants"),
+        body: merchantEntity.get(
+          required = ['name']
+        )
       )
 
       response = @client.process_request request
@@ -30,24 +31,24 @@ module Paysafe
 
     def createMerchantAccount merchantAccount
       request = Request.new(
-      method: Request::POST,
-      uri: prepare_uri("/merchants/#{merchantAccount.merchantId}/accounts"),
-      body: merchantAccount.get(
-        required = [
-          'name',
-          'legalEntity',
-          'currency',
-          'region',
-          'phone',
-          'category',
-          'averageTransactionAmount',
-          'yearlyVolumeRange',
-          'merchantDescriptor',
-          'productCode',
-          'usAccountDetails',
-          'address'
-        ]
-      )
+        method: Request::POST,
+        uri: prepare_uri("/merchants/#{merchantAccount.merchantId}/accounts"),
+        body: merchantAccount.get(
+          required = [
+            'name',
+            'legalEntity',
+            'currency',
+            'region',
+            'phone',
+            'category',
+            'averageTransactionAmount',
+            'yearlyVolumeRange',
+            'merchantDescriptor',
+            'productCode',
+            'usAccountDetails',
+            'address'
+          ]
+        )
       )
 
       response = @client.process_request request
@@ -56,11 +57,11 @@ module Paysafe
 
     def createMerchantAccountAddress merchantAccountAddress
       request = Request.new(
-      method: Request::POST,
-      uri: prepare_uri("/accounts/#{merchantAccountAddress.accountId}/addresses"),
-      body: merchantAccountAddress.get(
-        required = ['street', 'city', 'state', 'country', 'zip']
-      )
+        method: Request::POST,
+        uri: prepare_uri("/accounts/#{merchantAccountAddress.accountId}/addresses"),
+        body: merchantAccountAddress.get(
+          required = ['street', 'city', 'state', 'country', 'zip']
+        )
       )
 
       response = @client.process_request request
@@ -69,20 +70,20 @@ module Paysafe
 
     def createBusinessOwner businessOwner
       request = Request.new(
-      method: Request::POST,
-      uri: prepare_uri("/accounts/#{businessOwner.accountId}/businessowners"),
-      body: businessOwner.get(
-        required = [
-          'firstName',
-          'lastName',
-          'jobTitle',
-          'phone',
-          'dateOfBirth',
-          'ssn',
-          'isApplicant',
-          'currentAddress',
-        ]
-      )
+        method: Request::POST,
+        uri: prepare_uri("/accounts/#{businessOwner.accountId}/businessowners"),
+        body: businessOwner.get(
+          required = [
+            'firstName',
+            'lastName',
+            'jobTitle',
+            'phone',
+            'dateOfBirth',
+            'ssn',
+            'isApplicant',
+            'currentAddress'
+          ]
+        )
       )
 
       response = @client.process_request request
@@ -91,11 +92,11 @@ module Paysafe
 
     def createBusinessOwnerAddress businessOwnerAddress
       request = Request.new(
-      method: Request::POST,
-      uri: prepare_uri("/businessowners/#{businessOwnerAddress.businessOwnerId}/currentaddresses"),
-      body: businessOwnerAddress.get(
-        required = ['street', 'city', 'state', 'zip', 'country']
-      )
+        method: Request::POST,
+        uri: prepare_uri("/businessowners/#{businessOwnerAddress.businessOwnerId}/currentaddresses"),
+        body: businessOwnerAddress.get(
+          required = ['street', 'city', 'state', 'zip', 'country']
+        )
       )
 
       response = @client.process_request request
@@ -104,11 +105,11 @@ module Paysafe
 
     def createUser user
       request = Request.new(
-      method: Request::POST,
-      uri: prepare_uri("/accounts/#{user.accountId}/users"),
-      body: user.get(
-        required = ['userName', 'password', 'email', 'recoveryQuestion']
-      )
+        method: Request::POST,
+        uri: prepare_uri("/accounts/#{user.accountId}/users"),
+        body: user.get(
+          required = ['userName', 'password', 'email', 'recoveryQuestion']
+        )
       )
 
       response = @client.process_request request
@@ -117,11 +118,11 @@ module Paysafe
 
     def createACHBankAcccount bankAccount
       request = Request.new(
-      method: Request::POST,
-      uri: prepare_uri("/accounts/#{bankAccount.accountId}/achbankaccounts"),
-      body: bankAccount.get(
-        required = ['accountNumber', 'routingNumber']
-      )
+        method: Request::POST,
+        uri: prepare_uri("/accounts/#{bankAccount.accountId}/achbankaccounts"),
+        body: bankAccount.get(
+          required = ['accountNumber', 'routingNumber']
+        )
       )
 
       response = @client.process_request request
@@ -130,11 +131,11 @@ module Paysafe
 
     def acceptTermsAndConditions acceptance
       request = Request.new(
-      method: Request::POST,
-      uri: prepare_uri("/accounts/#{acceptance.accountId}/termsandconditions"),
-      body: acceptance.get(
-        required = ['version']
-      )
+        method: Request::POST,
+        uri: prepare_uri("/accounts/#{acceptance.accountId}/termsandconditions"),
+        body: acceptance.get(
+          required = ['version']
+        )
       )
 
       response = @client.process_request request
@@ -143,8 +144,8 @@ module Paysafe
 
     def getTermsAndConditions merchantAccountId
       request = Request.new(
-      method: Request::GET,
-      uri: prepare_uri("/accounts/#{merchantAccountId}/termsandconditions")
+        method: Request::GET,
+        uri: prepare_uri("/accounts/#{merchantAccountId}/termsandconditions")
       )
 
       response = @client.process_request(request, raw_response: true)
@@ -154,11 +155,11 @@ module Paysafe
 
     def initiateIdentityVerification identityVerification
       request = Request.new(
-      method: Request::POST,
-      uri: "/identity/v1/accounts/#{identityVerification.KYCAccountId}/identifications",
-      body: identityVerification.get(
-        required = ['merchantRefNum', 'profile']
-      )
+        method: Request::POST,
+        uri: "/identity/v1/accounts/#{identityVerification.KYCAccountId}/identifications",
+        body: identityVerification.get(
+          required = ['merchantRefNum', 'profile']
+        )
       )
 
       response = @client.process_request request
@@ -167,9 +168,9 @@ module Paysafe
 
     def answerChallenges answers
       request = Request.new(
-      method: Request::PUT,
-      uri: "/identity/v1/accounts/#{answers.KYCAccountId}/identifications/#{answers.responseId}/challengeQuestions/#{answers.questionSetId}",
-      body: answers.get()["answers"]
+        method: Request::PUT,
+        uri: "/identity/v1/accounts/#{answers.KYCAccountId}/identifications/#{answers.responseId}/challengeQuestions/#{answers.questionSetId}",
+        body: answers.get()["answers"]
       )
 
       response = @client.process_request request
@@ -178,11 +179,11 @@ module Paysafe
 
     def completeIdentityVerification identityVerification
       request = Request.new(
-      method: Request::POST,
-      uri: prepare_uri("/accounts/#{identityVerification.accountId}/identity"),
-      body: identityVerification.get(
-        ignore = ['accountId']
-      )
+        method: Request::POST,
+        uri: prepare_uri("/accounts/#{identityVerification.accountId}/identity"),
+        body: identityVerification.get(
+          ignore = ['accountId']
+        )
       )
 
       @client.process_request request
@@ -190,9 +191,9 @@ module Paysafe
 
     def submitMerchantAccountForActivation accountId
       request = Request.new(
-      method: Request::POST,
-      uri: prepare_uri("/accounts/#{accountId}/activation"),
-      body: {}
+        method: Request::POST,
+        uri: prepare_uri("/accounts/#{accountId}/activation"),
+        body: {}
       )
 
       response = @client.process_request request
@@ -202,9 +203,9 @@ module Paysafe
 
     def beginBankVerification bankAccountId
       request = Request.new(
-      method: Request::POST,
-      uri: prepare_uri("/bankaccounts/#{bankAccountId}/microdeposits"),
-      body: {}
+        method: Request::POST,
+        uri: prepare_uri("/bankaccounts/#{bankAccountId}/microdeposits"),
+        body: {}
       )
 
       @client.process_request request
@@ -213,11 +214,11 @@ module Paysafe
 
     def completeBankVerification validation
       request = Request.new(
-      method: Request::POST,
-      uri: prepare_uri("/microdeposits/#{validation.microdepositID}/validate"),
-      body: validation.get(
-        required = ['amount']
-      )
+        method: Request::POST,
+        uri: prepare_uri("/microdeposits/#{validation.microdepositID}/validate"),
+        body: validation.get(
+          required = ['amount']
+        )
       )
 
       @client.process_request request
