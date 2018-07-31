@@ -5,7 +5,7 @@ module Paysafe
       @uri = "/accountmanagement/v1" # URI for Account Management API
     end
 
-    def available
+    def available?
       request = Request.new(
       method: Request::GET,
       uri: "/accountmanagement/monitor",
@@ -72,7 +72,16 @@ module Paysafe
       method: Request::POST,
       uri: prepare_uri("/accounts/#{businessOwner.accountId}/businessowners"),#?operationMode=consolidated
       body: businessOwner.get(
-        required = ['firstName', 'lastName', 'jobTitle', 'phone', 'dateOfBirth', 'ssn', 'isApplicant', 'currentAddress']
+        required = [
+          'firstName',
+          'lastName',
+          'jobTitle',
+          'phone',
+          'dateOfBirth',
+          'ssn',
+          'isApplicant',
+          'currentAddress',
+        ]
       )
       )
 
@@ -187,7 +196,6 @@ module Paysafe
       )
 
       response = @client.process_request request
-      bindings.pry
       response
       # response.account.status
     end
