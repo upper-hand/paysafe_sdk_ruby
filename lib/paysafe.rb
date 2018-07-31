@@ -1,15 +1,15 @@
 <<-DOC
  * Copyright (c) 2016 Paysafe
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
  * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -20,6 +20,7 @@
 
 require_relative "paysafe/card_payment_service"
 require "paysafe/customer_vault_service"
+require "paysafe/account_management_service"
 require "paysafe/environment"
 # require "paysafe/hosted_payment_service"
 require "paysafe/json_object"
@@ -48,6 +49,21 @@ require "paysafe/customer_vault/eft_bank_account"
 require "paysafe/customer_vault/sepa_bank_account"
 require "paysafe/customer_vault/bacs_bank_account"
 require "paysafe/customer_vault/mandate"
+
+require "paysafe/account_management/merchant_entity"
+require "paysafe/account_management/merchant_account"
+require "paysafe/account_management/merchant_account_address"
+require "paysafe/account_management/business_owner"
+require "paysafe/account_management/business_owner_address"
+require "paysafe/account_management/ach_bank_account"
+require "paysafe/account_management/terms_and_conditions_acceptance"
+require "paysafe/account_management/identity_verification_request"
+require "paysafe/account_management/identity_verification_response"
+require "paysafe/account_management/answer_challenge_request"
+require "paysafe/account_management/answer_challenge_response"
+require "paysafe/account_management/complete_identity_verification"
+require "paysafe/account_management/bank_account_validation"
+require "paysafe/account_management/user"
 
 # require "paysafe/hosted_payment/billing_details"
 # require "paysafe/hosted_payment/card"
