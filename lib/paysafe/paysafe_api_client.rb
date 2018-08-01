@@ -59,6 +59,10 @@ module Paysafe
       @account = account
     end
 
+    def account_management_service
+      AccountManagementService.new self
+    end
+
     def card_payment_service
       CardPaymentService.new self
     end
