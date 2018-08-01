@@ -196,9 +196,7 @@ module Paysafe
         body: {}
       )
 
-      response = @client.process_request request
-      response
-      # response.account.status
+      @client.process_request request
     end
 
     def beginBankVerification bankAccountId
