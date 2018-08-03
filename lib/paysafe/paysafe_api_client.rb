@@ -79,7 +79,7 @@ module Paysafe
       ThreeDSecureService.new self
     end
 
-    def process_request request
+    def process_request request, raw_response: false
       uri = URI.parse(request.build_url(@api_end_point))
       http = Net::HTTP.new uri.host, uri.port
       #http.set_debug_output $stderr
@@ -107,6 +107,10 @@ module Paysafe
 
       if request.data[:method] == Request::DELETE and response.body == ""
         return (response_code == 200)
+      end
+
+      if raw_response
+        return response
       end
 
       begin
