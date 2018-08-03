@@ -113,7 +113,7 @@ module Paysafe
       )
 
       response = @client.process_request request
-      AccountManagement::BusinessOwnerAddress::new response
+      AccountManagement::User::new response
     end
 
     def createACHBankAcccount bankAccount
