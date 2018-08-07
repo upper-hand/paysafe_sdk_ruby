@@ -113,7 +113,7 @@ module Paysafe
       )
 
       response = @client.process_request request
-      AccountManagement::BusinessOwnerAddress::new response
+      AccountManagement::User::new response
     end
 
     def createACHBankAcccount bankAccount
@@ -149,7 +149,8 @@ module Paysafe
       )
 
       response = @client.process_request(request, raw_response: true)
-      version = response['x_terms_version'].split(" ").last
+      raw_version = response['x_terms_version']
+      version = raw_version.present?  ? raw_version.split(" ").last : ""
       {terms: response.body, version: version}
     end
 
