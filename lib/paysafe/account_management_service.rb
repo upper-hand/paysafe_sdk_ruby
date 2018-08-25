@@ -129,6 +129,16 @@ module Paysafe
       AccountManagement::ACHBankAccount::new response
     end
 
+    def fetchBankAccount id
+      request = Request.new(
+        method: Request::GET,
+        uri: prepare_uri("/achbankaccounts/#{id}"),
+      )
+
+      response = @client.process_request request
+      AccountManagement::ACHBankAccount::new response
+    end
+
     def acceptTermsAndConditions acceptance
       request = Request.new(
         method: Request::POST,
@@ -209,7 +219,6 @@ module Paysafe
 
       @client.process_request request
     end
-
 
     def completeBankVerification validation
       request = Request.new(
