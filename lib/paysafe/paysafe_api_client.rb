@@ -156,7 +156,7 @@ module Paysafe
           exception = http_code >= 500 ? APIError : PaysafeError
       end
 
-      return exception.new(response, code), code.to_s + ": " + message
+      [exception.new(response, code), "#{code}: #{message}"]
     end
   end
 end
