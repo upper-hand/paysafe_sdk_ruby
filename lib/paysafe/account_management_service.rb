@@ -37,6 +37,7 @@ module Paysafe
           required = [
             'name',
             'legalEntity',
+            'url',
             'currency',
             'region',
             'phone',
@@ -45,8 +46,7 @@ module Paysafe
             'yearlyVolumeRange',
             'merchantDescriptor',
             'productCode',
-            'usAccountDetails',
-            'address'
+            'usAccountDetails'
           ],
           ignore = ['merchantId']
         )
@@ -201,7 +201,7 @@ module Paysafe
         method: Request::POST,
         uri: prepare_uri("/accounts/#{identityVerification.accountId}/identity"),
         body: identityVerification.get(
-          required=[],
+          required=['identityId'],
           ignore = ['accountId']
         )
       )
