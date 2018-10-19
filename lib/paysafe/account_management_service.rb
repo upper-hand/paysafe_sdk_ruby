@@ -193,6 +193,7 @@ module Paysafe
         method: Request::POST,
         uri: prepare_uri("/accounts/#{identityVerification.accountId}/identity"),
         body: identityVerification.get(
+          required=[],
           ignore = ['accountId']
         )
       )
