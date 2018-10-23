@@ -5,6 +5,7 @@ module Paysafe
       attr_accessor :merchantId
       attr_accessor :name
       attr_accessor :legalEntity
+      attr_accessor :url
       attr_accessor :currency
       attr_accessor :region
       attr_accessor :phone

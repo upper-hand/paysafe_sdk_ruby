@@ -37,6 +37,7 @@ module Paysafe
           required = [
             'name',
             'legalEntity',
+            'url',
             'currency',
             'region',
             'phone',
@@ -45,9 +46,9 @@ module Paysafe
             'yearlyVolumeRange',
             'merchantDescriptor',
             'productCode',
-            'usAccountDetails',
-            'address'
-          ]
+            'usAccountDetails'
+          ],
+          ignore = ['merchantId']
         )
       )
 
@@ -60,7 +61,8 @@ module Paysafe
         method: Request::POST,
         uri: prepare_uri("/accounts/#{merchantAccountAddress.accountId}/addresses"),
         body: merchantAccountAddress.get(
-          required = ['street', 'city', 'state', 'country', 'zip']
+          required = ['street', 'city', 'state', 'country', 'zip'],
+          ignore = ['accountId']
         )
       )
 
@@ -82,7 +84,8 @@ module Paysafe
             'ssn',
             'isApplicant',
             'currentAddress'
-          ]
+          ],
+          ignore = ['accountId']
         )
       )
 
@@ -95,7 +98,8 @@ module Paysafe
         method: Request::POST,
         uri: prepare_uri("/businessowners/#{businessOwnerAddress.businessOwnerId}/currentaddresses"),
         body: businessOwnerAddress.get(
-          required = ['street', 'city', 'state', 'zip', 'country']
+          required = ['street', 'city', 'state', 'zip', 'country'],
+          ignore = ['businessOwnerId']
         )
       )
 
@@ -108,7 +112,8 @@ module Paysafe
         method: Request::POST,
         uri: prepare_uri("/accounts/#{user.accountId}/users"),
         body: user.get(
-          required = ['userName', 'password', 'email', 'recoveryQuestion']
+          required = ['userName', 'password', 'email', 'recoveryQuestion'],
+          ignore = ['accountId']
         )
       )
 
@@ -121,7 +126,8 @@ module Paysafe
         method: Request::POST,
         uri: prepare_uri("/accounts/#{bankAccount.accountId}/achbankaccounts"),
         body: bankAccount.get(
-          required = ['accountNumber', 'routingNumber']
+          required = ['accountNumber', 'routingNumber'],
+          ignore = ['accountId']
         )
       )
 
@@ -144,7 +150,8 @@ module Paysafe
         method: Request::POST,
         uri: prepare_uri("/accounts/#{acceptance.accountId}/termsandconditions"),
         body: acceptance.get(
-          required = ['version']
+          required = ['version'],
+          ignore = ['accountId']
         )
       )
 
@@ -169,7 +176,8 @@ module Paysafe
         method: Request::POST,
         uri: "/identity/v1/accounts/#{identityVerification.KYCAccountId}/identifications",
         body: identityVerification.get(
-          required = ['merchantRefNum', 'profile']
+          required = ['merchantRefNum', 'profile'],
+          ignore = ['KYCAccountId']
         )
       )
 
@@ -193,7 +201,7 @@ module Paysafe
         method: Request::POST,
         uri: prepare_uri("/accounts/#{identityVerification.accountId}/identity"),
         body: identityVerification.get(
-          required=[],
+          required=['identityId'],
           ignore = ['accountId']
         )
       )
@@ -226,7 +234,8 @@ module Paysafe
         method: Request::POST,
         uri: prepare_uri("/microdeposits/#{validation.microdepositID}/validate"),
         body: validation.get(
-          required = ['amount']
+          required = ['amount'],
+          ignore = ['microdepositID']
         )
       )
 
