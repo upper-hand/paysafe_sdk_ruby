@@ -103,6 +103,7 @@ module Paysafe
       )
 
       response = @client.process_request request
+      CustomerVault::Profile::new response
     end
 
     ###########
@@ -158,7 +159,6 @@ module Paysafe
       )
 
       response = @client.process_request request
-      CustomerVault::Card::new response
     end
 
     ###########
