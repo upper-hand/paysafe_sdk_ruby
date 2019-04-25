@@ -122,7 +122,7 @@ module Paysafe
 
       if json_response.is_a?(Hash)
         if response_code < 200 or response_code >= 206
-          error_msg = json_response.has_key?(:error) ? json_response[:error][:message] : nil
+          error_msg = json_response.has_key?(:error) ? json_response[:error] : nil
           raise *get_paysafe_exception(response_code, error_msg, nil, json_response)
         end
       else
