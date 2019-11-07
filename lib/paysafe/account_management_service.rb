@@ -56,6 +56,16 @@ module Paysafe
       AccountManagement::MerchantAccount::new response
     end
 
+    def getMerchantAccountInfo merchantAccount
+      request = Request.new(
+        method: Request::GET,
+        uri: prepare_uri("/accounts/#{merchantAccount.merchantId}"),
+        )
+
+      response = @client.process_request request
+      AccountManagement::LookUpMerchantAccount::new response
+    end
+
     def createMerchantAccountAddress merchantAccountAddress
       request = Request.new(
         method: Request::POST,
