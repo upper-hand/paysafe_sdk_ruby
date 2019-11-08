@@ -16,6 +16,11 @@ module Paysafe
       attr_accessor :productCode
       attr_accessor :usAccountDetails
       attr_accessor :address
+      attr_accessor :businessOwners
+
+      def dateOfBirth
+        businessOwners.first[:dateOfBirth]
+      end
     end
   end
 end
