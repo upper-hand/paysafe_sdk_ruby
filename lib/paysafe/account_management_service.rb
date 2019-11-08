@@ -59,8 +59,8 @@ module Paysafe
     def getMerchantAccountInfo merchantAccount
       request = Request.new(
         method: Request::GET,
-        uri: prepare_uri("/accounts/#{merchantAccount.merchantId}"),
-        )
+        uri: prepare_uri("/accounts/#{merchantAccount.merchantId}")
+      )
 
       response = @client.process_request request
       AccountManagement::LookUpMerchantAccount::new response

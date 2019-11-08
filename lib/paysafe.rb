@@ -52,6 +52,7 @@ require "paysafe/customer_vault/mandate"
 
 require "paysafe/account_management/merchant_entity"
 require "paysafe/account_management/merchant_account"
+require "paysafe/account_management/look_up_merchant_account"
 require "paysafe/account_management/merchant_account_address"
 require "paysafe/account_management/business_owner"
 require "paysafe/account_management/business_owner_address"
