@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = "Paysafe"
-  s.version     = "1.0.8"
-  s.date        = "2014-03-11"
+  s.version     = "1.0.9"
+  s.date        = "2019-08-11"
   s.summary     = "Paysafe API"
   s.description = "Paysafe API integration with Ruby"
   s.authors     = "Paysafe "
