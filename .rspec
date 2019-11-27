@@ -1,4 +1,4 @@
 --color
 --require spec_helper
---format Fuubar
+--format documentation
 --no-profile
