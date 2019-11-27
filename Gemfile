@@ -1,2 +1,5 @@
-gem 'rubocop', '0.75.0'
-gem 'rubocop-performance'
+# frozen_string_literal: true
+
+source 'https://rubygems.org'
+
+gemspec
