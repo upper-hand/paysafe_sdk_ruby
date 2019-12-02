@@ -1,33 +1,19 @@
-<<-DOC
- * Copyright (c) 2016 Paysafe
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all copies or
- * substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
- * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- DOC
+# frozen_string_literal: true
 
 require 'net/https'
-require "resolv-replace.rb"
+require 'resolv-replace.rb'
 require 'uri'
-require "base64"
+require 'base64'
 require 'yaml'
 require 'json'
 
 module Paysafe
   class PaysafeApiClient
-    API_TEST = "https://api.test.paysafe.com"
-    API_LIVE = "https://api.paysafe.com"
+    API_TEST = 'https://api.test.paysafe.com'
+    API_LIVE = 'https://api.paysafe.com'
+
+    private_constant :API_TEST
+    private_constant :API_LIVE
 
     # Merchant's api key
     @key_id = nil
@@ -42,21 +28,26 @@ module Paysafe
     @api_end_point = nil
 
     @account = nil
-    @cert = nil
+    @cert    = nil
 
     attr_accessor :account
 
-    def initialize(key_id, key_password, environment=Environment::TEST, account=nil, cert=nil)
-      if environment != Environment::TEST and environment != Environment::LIVE
-        raise PaysafeError, "Invalid environment specified"
+    def initialize(
+      key_id,
+      key_password,
+      environment = Environment::TEST,
+      account = nil, cert = nil
+    )
+      if environment != Environment::TEST && environment != Environment::LIVE
+        raise PaysafeError, 'Invalid environment specified'
       end
 
-      @cert = cert
-      @key_id = key_id
-      @key_password = key_password
-      @environment = environment
+      @cert          = cert
+      @key_id        = key_id
+      @key_password  = key_password
+      @environment   = environment
       @api_end_point = environment == Environment::TEST ? API_TEST : API_LIVE
-      @account = account
+      @account       = account
     end
 
     def account_management_service
@@ -71,7 +62,7 @@ module Paysafe
       CustomerVaultService.new self
     end
 
-   	def direct_debit_service
+    def direct_debit_service
       DirectDebitService.new self
     end
 
@@ -79,81 +70,79 @@ module Paysafe
       ThreeDSecureService.new self
     end
 
-    def process_request request, raw_response: false
-      uri = URI.parse(request.build_url(@api_end_point))
+    def process_request(request, raw_response: false)
+      uri  = URI.parse(request.build_url(@api_end_point))
       http = Net::HTTP.new uri.host, uri.port
-      #http.set_debug_output $stderr
-      http.use_ssl = true
+      # http.set_debug_output $stderr
+      http.use_ssl     = true
       http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-      http.cert_store = OpenSSL::X509::Store.new
+      http.cert_store  = OpenSSL::X509::Store.new
       http.cert_store.set_default_paths
       http.cert_store.add_file @cert unless @cert.nil?
-      http.cert_store.add_file ENV["SSL_CERT_FILE"] unless ENV["SSL_CERT_FILE"].nil?
+      http.cert_store.add_file ENV['SSL_CERT_FILE'] unless ENV['SSL_CERT_FILE'].nil?
+
       if request.data[:method] == Request::GET
         net = Net::HTTP::Get.new(uri.request_uri)
       elsif request.data[:method] == Request::DELETE
         net = Net::HTTP::Delete.new(uri.path)
       elsif request.data[:method] == Request::PUT
-        net = Net::HTTP::Put.new(uri.path)
+        net      = Net::HTTP::Put.new(uri.path)
         net.body = request.data[:body].to_json
       else
-        net = Net::HTTP::Post.new(uri.path)
+        net      = Net::HTTP::Post.new(uri.path)
         net.body = request.data[:body].to_json
       end
-      net["Authorization"] = "Basic " + Base64.strict_encode64(@key_id + ":" + @key_password)
-      net["Content-Type"] = "application/json"
-      response = http.request(net)
-      response_code = response.code.to_i
 
-      if request.data[:method] == Request::DELETE and response.body == ""
+      net['Authorization'] = 'Basic ' + Base64.strict_encode64(@key_id + ':' + @key_password)
+      net['Content-Type']  = 'application/json'
+      response             = http.request(net)
+      response_code        = Integer(response.code, 10)
+
+      if request.data[:method] == Request::DELETE && response.body == ''
         return (response_code == 200)
       end
 
-      if raw_response
-        return response
-      end
+      return response if raw_response
 
       begin
-        json_response = JSON.parse(response.body, {:symbolize_names => true})
-
+        json_response = JSON.parse(response.body, symbolize_names: true)
       rescue JSON::ParserError
-        raise *get_paysafe_exception(response_code, response.body)
+        raise(*get_paysafe_exception(response_code, response.body))
       end
 
-      if json_response.is_a?(Hash)
-        if response_code < 200 or response_code >= 206
-          error_msg = json_response.has_key?(:error) ? json_response[:error][:message] : nil
-          raise *get_paysafe_exception(response_code, error_msg, nil, json_response)
-        end
-      else
-        raise *get_paysafe_exception(response_code)
+      raise(*get_paysafe_exception(response_code)) unless json_response.is_a?(Hash)
+
+      if response_code < 200 || response_code >= 206
+        error_msg = json_response.key?(:error) ? json_response[:error][:message] : nil
+        raise(*get_paysafe_exception(response_code, error_msg, nil, json_response))
       end
+
       json_response
     end
 
-    def get_paysafe_exception http_code, message="", code=nil, response={}
-      message = "An unknown error has occurred." if message == ""
-      code = http_code if code.nil?
-      exception = PaysafeError
+    def get_paysafe_exception(http_code, message = '', code = nil, response = {})
+      message = 'An unknown error has occurred.' if message == ''
+      code    = http_code if code.nil?
 
-      case http_code
-        when 400
-          exception = InvalidRequestError
-        when 401
-          exception = InvalidCredentialsError
-        when 402
-          exception = RequestDeclinedError
-        when 403
-          exception = PermissionError
-        when 404
-          exception = EntityNotFoundError
-        when 409
-          exception = RequestConflictError
-        when 406
-        when 415
-          exception = APIError
-        else
-          exception = http_code >= 500 ? APIError : PaysafeError
+      exception = case http_code
+                  when 400
+                    InvalidRequestError
+                  when 401
+                    InvalidCredentialsError
+                  when 402
+                    RequestDeclinedError
+                  when 403
+                    PermissionError
+                  when 404
+                    EntityNotFoundError
+                  when 409
+                    RequestConflictError
+                  when 406
+                    APIError
+                  when 415
+                    APIError
+                  else
+                    http_code >= 500 ? APIError : PaysafeError
       end
 
       [exception.new(response, code), "#{code}: #{message}"]
