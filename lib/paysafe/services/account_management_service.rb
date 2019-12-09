@@ -245,7 +245,7 @@ module Paysafe
       {terms: response.body.force_encoding('utf-8'), version: version}
     end
 
-    alias getTermsAndConditions getTermsAndConditions
+    alias getTermsAndConditions get_terms_and_conditions
     deprecate(
       'getTermsAndConditions',
       :get_terms_and_conditions,
@@ -345,7 +345,12 @@ module Paysafe
     end
 
     alias beginBankVerification begin_bank_verification
-    deprecate('beginBankVerification', :begin_bank_verification, 2020, 2)
+    deprecate(
+      'beginBankVerification',
+      :begin_bank_verification,
+      2020,
+      2,
+    )
 
     def complete_bank_verification(validation)
       request = Request.new(
@@ -360,8 +365,13 @@ module Paysafe
       @client.process_request request
     end
 
-    alias completeBankVerification completeBankVerification
-    deprecate('completeBankVerification', :completeBankVerification, 2020, 2)
+    alias completeBankVerification complete_bank_verification
+    deprecate(
+      'completeBankVerification',
+      :completeBankVerification,
+      2020,
+      2,
+    )
 
   private
 
