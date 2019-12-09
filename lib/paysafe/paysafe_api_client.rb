@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
+require 'base64'
+require 'json'
 require 'net/https'
 require 'resolv-replace.rb'
 require 'uri'
-require 'base64'
 require 'yaml'
-require 'json'
 
 module Paysafe
   class PaysafeApiClient
@@ -28,7 +28,7 @@ module Paysafe
     @api_end_point = nil
 
     @account = nil
-    @cert    = nil
+    @cert = nil
 
     attr_accessor :account
 
@@ -42,12 +42,12 @@ module Paysafe
         raise PaysafeError, 'Invalid environment specified'
       end
 
-      @cert          = cert
-      @key_id        = key_id
-      @key_password  = key_password
-      @environment   = environment
+      @cert = cert
+      @key_id = key_id
+      @key_password = key_password
+      @environment = environment
       @api_end_point = environment == Environment::TEST ? API_TEST : API_LIVE
-      @account       = account
+      @account = account
     end
 
     def account_management_service
@@ -71,12 +71,12 @@ module Paysafe
     end
 
     def process_request(request, raw_response: false)
-      uri  = URI.parse(request.build_url(@api_end_point))
+      uri = URI.parse(request.build_url(@api_end_point))
       http = Net::HTTP.new uri.host, uri.port
       # http.set_debug_output $stderr
-      http.use_ssl     = true
+      http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-      http.cert_store  = OpenSSL::X509::Store.new
+      http.cert_store = OpenSSL::X509::Store.new
       http.cert_store.set_default_paths
       http.cert_store.add_file @cert unless @cert.nil?
       http.cert_store.add_file ENV['SSL_CERT_FILE'] unless ENV['SSL_CERT_FILE'].nil?
@@ -86,17 +86,17 @@ module Paysafe
       elsif request.data[:method] == Request::DELETE
         net = Net::HTTP::Delete.new(uri.path)
       elsif request.data[:method] == Request::PUT
-        net      = Net::HTTP::Put.new(uri.path)
+        net = Net::HTTP::Put.new(uri.path)
         net.body = request.data[:body].to_json
       else
-        net      = Net::HTTP::Post.new(uri.path)
+        net = Net::HTTP::Post.new(uri.path)
         net.body = request.data[:body].to_json
       end
 
       net['Authorization'] = 'Basic ' + Base64.strict_encode64(@key_id + ':' + @key_password)
-      net['Content-Type']  = 'application/json'
-      response             = http.request(net)
-      response_code        = Integer(response.code, 10)
+      net['Content-Type'] = 'application/json'
+      response = http.request(net)
+      response_code = Integer(response.code, 10)
 
       if request.data[:method] == Request::DELETE && response.body == ''
         return (response_code == 200)
@@ -122,7 +122,7 @@ module Paysafe
 
     def get_paysafe_exception(http_code, message = '', code = nil, response = {})
       message = 'An unknown error has occurred.' if message == ''
-      code    = http_code if code.nil?
+      code = http_code if code.nil?
 
       exception = case http_code
                   when 400

@@ -5,10 +5,10 @@ require 'yaml'
 
 module Paysafe
   class Request
-    POST   = 'POST'
-    GET    = 'GET'
+    POST = 'POST'
+    GET = 'GET'
     DELETE = 'DELETE'
-    PUT    = 'PUT'
+    PUT = 'PUT'
 
     public_constant :POST
     public_constant :GET
@@ -40,6 +40,7 @@ module Paysafe
     def build_url(api_end_point)
       if @data[:url].nil?
         # rubocop:disable Lint/UriEscapeUnescape
+        # TODO: fix after refactoring and testing
         return api_end_point + @data[:uri] + '?' +
                URI.encode(@data[:query].map { |k, v| "#{k}=#{v}" }.join('&'))
         # rubocop:enable Lint/UriEscapeUnescape

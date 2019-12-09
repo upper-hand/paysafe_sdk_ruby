@@ -242,7 +242,7 @@ module Paysafe
       response = @client.process_request(request, raw_response: true)
       raw_version = response['x_terms_version']
       version = raw_version.present? ? raw_version.split(' ').last : ''
-      { terms: response.body.force_encoding('utf-8'), version: version }
+      {terms: response.body.force_encoding('utf-8'), version: version}
     end
 
     alias getTermsAndConditions getTermsAndConditions
