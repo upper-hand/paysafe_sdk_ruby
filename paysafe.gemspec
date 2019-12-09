@@ -23,8 +23,14 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
 
   s.add_development_dependency 'bundler', '~> 2.0'
+  s.add_development_dependency 'guard'
+  s.add_development_dependency 'guard-rspec'
+  s.add_development_dependency 'pry'
+  s.add_development_dependency 'pry-nav'
+  s.add_development_dependency 'pry-remote'
   s.add_development_dependency 'rake', '~> 10.0'
   s.add_development_dependency 'rspec', '~> 3.0'
+  s.add_development_dependency 'rspec-nc'
   s.add_development_dependency 'rubocop', '0.75.0'
   s.add_development_dependency 'rubocop-performance'
 end
