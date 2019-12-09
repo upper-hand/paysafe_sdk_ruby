@@ -1,251 +1,372 @@
+# frozen_string_literal: true
+
 module Paysafe
   class AccountManagementService
-    def initialize client
+    extend Gem::Deprecate
+
+    def initialize(client)
       @client = client # PaysafeApiClient
-      @uri = "/accountmanagement/v1" # URI for Account Management API
+      @uri = '/accountmanagement/v1' # URI for Account Management API
     end
 
     def available?
       request = Request.new(
         method: Request::GET,
-        uri: "/accountmanagement/monitor",
+        uri: '/accountmanagement/monitor',
       )
 
       response = @client.process_request request
 
-      response.status == "READY"
+      response.status == 'READY'
     end
 
-    def createMerchantEntity merchantEntity
+    def create_merchant_entity(merchant_entity)
       request = Request.new(
         method: Request::POST,
-        uri: prepare_uri("/merchants"),
-        body: merchantEntity.get(
-          required = ['name']
-        )
+        uri: prepare_uri('/merchants'),
+        body: merchant_entity.get(['name']),
       )
 
       response = @client.process_request request
-      AccountManagement::MerchantEntity::new response
+      AccountManagement::MerchantEntity.new response
     end
 
-    def createMerchantAccount merchantAccount
+    alias createMerchantEntity create_merchant_entity
+    deprecate(
+      'createMerchantEntity',
+      :create_merchant_entity,
+      2020,
+      2,
+    )
+
+    def create_merchant_account(merchant_account)
       request = Request.new(
         method: Request::POST,
-        uri: prepare_uri("/merchants/#{merchantAccount.merchantId}/accounts"),
-        body: merchantAccount.get(
-          required = [
-            'name',
-            'legalEntity',
-            'url',
-            'currency',
-            'region',
-            'phone',
-            'category',
-            'averageTransactionAmount',
-            'yearlyVolumeRange',
-            'merchantDescriptor',
-            'productCode',
-            'usAccountDetails'
+        uri: prepare_uri("/merchants/#{merchant_account.merchantId}/accounts"),
+        body: merchant_account.get(
+          %w[
+            name
+            legalEntity
+            url
+            currency
+            region
+            phone
+            category
+            averageTransactionAmount
+            yearlyVolumeRange
+            merchantDescriptor
+            productCode
+            usAccountDetails
           ],
-          ignore = ['merchantId']
-        )
+          ['merchantId'],
+        ),
       )
 
       response = @client.process_request request
-      AccountManagement::MerchantAccount::new response
+      AccountManagement::MerchantAccount.new response
     end
 
-    def createMerchantAccountAddress merchantAccountAddress
+    alias createMerchantAccount create_merchant_account
+    deprecate(
+      'createMerchantAccount',
+      :create_merchant_account,
+      2020,
+      2,
+    )
+
+    def create_merchant_account_address(merchant_address)
       request = Request.new(
         method: Request::POST,
-        uri: prepare_uri("/accounts/#{merchantAccountAddress.accountId}/addresses"),
-        body: merchantAccountAddress.get(
-          required = ['street', 'city', 'state', 'country', 'zip'],
-          ignore = ['accountId']
-        )
+        uri: prepare_uri("/accounts/#{merchant_address.accountId}/addresses"),
+        body: merchant_address.get(
+          %w[street city state country zip],
+          ['accountId'],
+        ),
       )
 
       response = @client.process_request request
-      AccountManagement::MerchantAccountAddress::new response
+      AccountManagement::MerchantAccountAddress.new response
     end
 
-    def createBusinessOwner businessOwner
+    alias createMerchantAccountAddress create_merchant_account_address
+    deprecate(
+      'createMerchantAccountAddress',
+      :create_merchant_account,
+      2020,
+      2,
+    )
+
+    def create_business_owner(business_owner)
       request = Request.new(
         method: Request::POST,
-        uri: prepare_uri("/accounts/#{businessOwner.accountId}/businessowners"),
-        body: businessOwner.get(
-          required = [
-            'firstName',
-            'lastName',
-            'jobTitle',
-            'phone',
-            'dateOfBirth',
-            'ssn',
-            'isApplicant',
-            'currentAddress'
+        uri: prepare_uri("/accounts/#{business_owner.accountId}/businessowners"),
+        body: business_owner.get(
+          %w[
+            firstName
+            lastName
+            jobTitle
+            phone
+            dateOfBirth
+            ssn
+            isApplicant
+            currentAddress
           ],
-          ignore = ['accountId']
-        )
+          ['accountId'],
+        ),
       )
 
       response = @client.process_request request
-      AccountManagement::BusinessOwner::new response
+      AccountManagement::BusinessOwner.new response
     end
 
-    def createBusinessOwnerAddress businessOwnerAddress
+    alias createBusinessOwner create_business_owner
+    deprecate(
+      'createBusinessOwner',
+      :create_business_owner,
+      2020,
+      2,
+    )
+
+    def create_business_owner_address(owner_address)
       request = Request.new(
         method: Request::POST,
-        uri: prepare_uri("/businessowners/#{businessOwnerAddress.businessOwnerId}/currentaddresses"),
-        body: businessOwnerAddress.get(
-          required = ['street', 'city', 'state', 'zip', 'country'],
-          ignore = ['businessOwnerId']
-        )
+        uri: prepare_uri("/businessowners/#{owner_address.businessOwnerId}/currentaddresses"),
+        body: owner_address.get(
+          %w[street city state zip country],
+          ['businessOwnerId'],
+        ),
       )
 
       response = @client.process_request request
-      AccountManagement::BusinessOwnerAddress::new response
+      AccountManagement::BusinessOwnerAddress.new response
     end
 
-    def createUser user
+    alias createBusinessOwnerAddress create_business_owner_address
+    deprecate(
+      'createBusinessOwnerAddress',
+      :create_business_owner_address,
+      2020,
+      2,
+    )
+
+    def create_user(user)
       request = Request.new(
         method: Request::POST,
         uri: prepare_uri("/accounts/#{user.accountId}/users"),
         body: user.get(
-          required = ['userName', 'password', 'email', 'recoveryQuestion'],
-          ignore = ['accountId']
-        )
+          %w[userName password email recoveryQuestion],
+          ['accountId'],
+        ),
       )
 
       response = @client.process_request request
-      AccountManagement::User::new response
+      AccountManagement::User.new response
     end
 
-    def createACHBankAcccount bankAccount
+    alias createUser create_user
+    deprecate(
+      'createUser',
+      :create_user,
+      2020,
+      2,
+    )
+
+    def create_ach_bank_account(bank_account)
       request = Request.new(
         method: Request::POST,
-        uri: prepare_uri("/accounts/#{bankAccount.accountId}/achbankaccounts"),
-        body: bankAccount.get(
-          required = ['accountNumber', 'routingNumber'],
-          ignore = ['accountId']
-        )
+        uri: prepare_uri("/accounts/#{bank_account.accountId}/achbankaccounts"),
+        body: bank_account.get(
+          %w[accountNumber routingNumber],
+          ['accountId'],
+        ),
       )
 
       response = @client.process_request request
-      AccountManagement::ACHBankAccount::new response
+      AccountManagement::ACHBankAccount.new response
     end
 
-    def fetchBankAccount id
+    alias createACHBankAcccount create_ach_bank_account
+    deprecate(
+      'createACHBankAcccount',
+      :create_ach_bank_account,
+      2020,
+      2,
+    )
+
+    def fetch_bank_account(id)
       request = Request.new(
         method: Request::GET,
         uri: prepare_uri("/achbankaccounts/#{id}"),
       )
 
       response = @client.process_request request
-      AccountManagement::ACHBankAccount::new response
+      AccountManagement::ACHBankAccount.new response
     end
 
-    def acceptTermsAndConditions acceptance
+    alias fetchBankAccount fetch_bank_account
+    deprecate(
+      'fetchBankAccount',
+      :fetch_bank_account,
+      2020,
+      2,
+    )
+
+    def accept_terms_and_conditions(acceptance)
       request = Request.new(
         method: Request::POST,
         uri: prepare_uri("/accounts/#{acceptance.accountId}/termsandconditions"),
         body: acceptance.get(
-          required = ['version'],
-          ignore = ['accountId']
-        )
+          ['version'],
+          ['accountId'],
+        ),
       )
 
       response = @client.process_request request
-      AccountManagement::TermsAndConditionsAcceptance::new response
+      AccountManagement::TermsAndConditionsAcceptance.new response
     end
 
-    def getTermsAndConditions merchantAccountId
+    alias acceptTermsAndConditions accept_terms_and_conditions
+    deprecate(
+      'acceptTermsAndConditions',
+      :accept_terms_and_conditions,
+      2020,
+      2,
+    )
+
+    def get_terms_and_conditions(merchant_account_id)
       request = Request.new(
         method: Request::GET,
-        uri: prepare_uri("/accounts/#{merchantAccountId}/termsandconditions")
+        uri: prepare_uri("/accounts/#{merchant_account_id}/termsandconditions"),
       )
 
       response = @client.process_request(request, raw_response: true)
       raw_version = response['x_terms_version']
-      version = raw_version.present?  ? raw_version.split(" ").last : ""
-      {terms: response.body.force_encoding('utf-8'), version: version}
+      version = raw_version.present? ? raw_version.split(' ').last : ''
+      { terms: response.body.force_encoding('utf-8'), version: version }
     end
 
-    def initiateIdentityVerification identityVerification
+    alias getTermsAndConditions getTermsAndConditions
+    deprecate(
+      'getTermsAndConditions',
+      :get_terms_and_conditions,
+      2020,
+      2,
+    )
+
+    def initiate_identity_verification(verification)
       request = Request.new(
         method: Request::POST,
-        uri: "/identity/v1/accounts/#{identityVerification.KYCAccountId}/identifications",
-        body: identityVerification.get(
-          required = ['merchantRefNum', 'profile'],
-          ignore = ['KYCAccountId']
-        )
+        uri: "/identity/v1/accounts/#{verification.KYCAccountId}/identifications",
+        body: verification.get(
+          %w[merchantRefNum profile],
+          ['KYCAccountId'],
+        ),
       )
 
       response = @client.process_request request
-      Paysafe::AccountManagement::IdentityVerificationResponse::new response
+      Paysafe::AccountManagement::IdentityVerificationResponse.new response
     end
 
-    def answerChallenges answers
+    alias initiateIdentityVerification initiate_identity_verification
+    deprecate(
+      'initiateIdentityVerification',
+      :initiate_identity_verification,
+      2020,
+      2,
+    )
+
+    def answer_challenges(answers)
       request = Request.new(
         method: Request::PUT,
-        uri: "/identity/v1/accounts/#{answers.KYCAccountId}/identifications/#{answers.responseId}/challengeQuestions/#{answers.questionSetId}",
-        body: answers.get()["answers"]
+        uri: "/identity/v1/accounts/#{answers.KYCAccountId}/identifications/
+              #{answers.responseId}/challengeQuestions/#{answers.questionSetId}",
+        body: answers.get['answers'],
       )
 
       response = @client.process_request request
-      Paysafe::AccountManagement::AnswerChallengeResponse::new response
+      Paysafe::AccountManagement::AnswerChallengeResponse.new response
     end
 
-    def completeIdentityVerification identityVerification
+    alias answerChallenges answer_challenges
+    deprecate(
+      'answerChallenges',
+      :answer_challenges,
+      2020,
+      2,
+    )
+
+    def complete_identity_verification(verification)
       request = Request.new(
         method: Request::POST,
-        uri: prepare_uri("/accounts/#{identityVerification.accountId}/identity"),
-        body: identityVerification.get(
-          required=['identityId'],
-          ignore = ['accountId']
-        )
+        uri: prepare_uri("/accounts/#{verification.accountId}/identity"),
+        body: verification.get(
+          ['identityId'],
+          ['accountId'],
+        ),
       )
 
       @client.process_request request
     end
 
-    def submitMerchantAccountForActivation accountId
+    alias completeIdentityVerification complete_identity_verification
+    deprecate(
+      'completeIdentityVerification',
+      :complete_identity_verification,
+      2020,
+      2,
+    )
+
+    def submit_merchant_account_for_activation(account_id)
       request = Request.new(
         method: Request::POST,
-        uri: prepare_uri("/accounts/#{accountId}/activation"),
-        body: {}
+        uri: prepare_uri("/accounts/#{account_id}/activation"),
+        body: {},
       )
 
       @client.process_request request
     end
 
-    def beginBankVerification bankAccountId
+    alias submitMerchantAccountForActivation submit_merchant_account_for_activation
+    deprecate(
+      'submitMerchantAccountForActivation',
+      :submit_merchant_account_for_activation,
+      2020,
+      2,
+    )
+
+    def begin_bank_verification(bank_account_id)
       request = Request.new(
         method: Request::POST,
-        uri: prepare_uri("/bankaccounts/#{bankAccountId}/microdeposits"),
-        body: {}
+        uri: prepare_uri("/bankaccounts/#{bank_account_id}/microdeposits"),
+        body: {},
       )
 
       @client.process_request request
     end
 
-    def completeBankVerification validation
+    alias beginBankVerification begin_bank_verification
+    deprecate('beginBankVerification', :begin_bank_verification, 2020, 2)
+
+    def complete_bank_verification(validation)
       request = Request.new(
         method: Request::POST,
         uri: prepare_uri("/microdeposits/#{validation.microdepositID}/validate"),
         body: validation.get(
-          required = ['amount'],
-          ignore = ['microdepositID']
-        )
+          ['amount'],
+          ['microdepositID'],
+        ),
       )
 
       @client.process_request request
     end
 
-    private
+    alias completeBankVerification completeBankVerification
+    deprecate('completeBankVerification', :completeBankVerification, 2020, 2)
+
+  private
 
     # Prepare URI for submission to the API
-    def prepare_uri path
+    def prepare_uri(path)
       "#{@uri}#{path}"
     end
   end
