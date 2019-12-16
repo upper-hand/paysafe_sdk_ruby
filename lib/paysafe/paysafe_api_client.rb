@@ -36,7 +36,8 @@ module Paysafe
       key_id,
       key_password,
       environment = Environment::TEST,
-      account = nil, cert = nil
+      account = nil,
+      cert = nil
     )
       if environment != Environment::TEST && environment != Environment::LIVE
         raise PaysafeError, 'Invalid environment specified'
@@ -119,6 +120,8 @@ module Paysafe
 
       json_response
     end
+
+  private
 
     def get_paysafe_exception(http_code, message = '', code = nil, response = {})
       message = 'An unknown error has occurred.' if message == ''
