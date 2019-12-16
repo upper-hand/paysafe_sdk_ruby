@@ -1,14 +1,10 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require 'api_client_shared_context'
 
 RSpec.describe Paysafe::PaysafeApiClient do
-  subject(:api_client) do
-    Paysafe::PaysafeApiClient.new(
-      ENV['PAYSAFE_USER'],
-      ENV['PAYSAFE_PASSWORD'],
-    )
-  end
+  include_context 'uses api client'
 
   it 'should construct' do
     expect(api_client).to be_a Paysafe::PaysafeApiClient
