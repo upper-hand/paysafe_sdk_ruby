@@ -12,7 +12,7 @@ module Paysafe
       attr_accessor :dateOfBirth
       attr_accessor :ssn
       attr_accessor :isApplicant
-      attr_accessor :currentAddress
+      attr_accessor :isControlProng
     end
   end
 end

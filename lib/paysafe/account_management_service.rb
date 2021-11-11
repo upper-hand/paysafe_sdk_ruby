@@ -83,7 +83,7 @@ module Paysafe
             'dateOfBirth',
             'ssn',
             'isApplicant',
-            'currentAddress'
+            'isControlProng'
           ],
           ignore = ['accountId']
         )
