@@ -11,6 +11,7 @@ module Paysafe
       attr_accessor :phone
       attr_accessor :dateOfBirth
       attr_accessor :ssn
+      attr_accessor :percentageOwnership
       attr_accessor :isApplicant
       attr_accessor :isControlProng
     end
