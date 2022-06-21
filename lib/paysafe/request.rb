@@ -36,7 +36,7 @@ module Paysafe
     def build_url api_end_point
       if @data[:url].nil?
         return api_end_point + @data[:uri] + "?" +
-          URI.encode(@data[:query].map{|k,v| "#{k}=#{v}"}.join("&"))
+          CGI.encode(@data[:query].map{|k,v| "#{k}=#{v}"}.join("&"))
       end
 
       if @data[:url].index(api_end_point) != 0
