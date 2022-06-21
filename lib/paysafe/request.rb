@@ -18,7 +18,7 @@
  DOC
 
 require 'uri'
-require "yaml"
+require 'yaml'
 
 module Paysafe
   class Request
@@ -35,8 +35,7 @@ module Paysafe
     # Build url for the paysafe api client.
     def build_url api_end_point
       if @data[:url].nil?
-        return api_end_point + @data[:uri] + "?" +
-          CGI.escape(@data[:query].map{|k,v| "#{k}=#{v}"}.join("&"))
+        return api_end_point + @data[:uri] + '?' + @data[:query].to_param
       end
 
       if @data[:url].index(api_end_point) != 0
