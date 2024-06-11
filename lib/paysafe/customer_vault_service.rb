@@ -506,23 +506,12 @@ module Paysafe
     ####################
     # ACH Bank Account
     ####################
-
-    def create_ach_singleUseToken body
-      request = Request.new(
-        method: Request::POST,
-        uri: prepare_uri('/achsingleusetokens'),
-        body: body
-      )
-
-      @client.process_request request
-    end
-
     def create_ach_bank_account ach_bank_account
       request = Request.new(
       method: Request::POST,
       uri: prepare_uri("/profiles/" + ach_bank_account.profileID + "/achbankaccounts"),
       body: ach_bank_account.get(
-      required = ['accountHolderName', 'accountNumber', 'routingNumber', 'billingAddressId', 'accountType'],
+      required = ['accountHolderName', 'accountNumber', 'routingNumber', 'billingAddress', 'accountType'],
       ignore = ['profileID']
       )
       )
