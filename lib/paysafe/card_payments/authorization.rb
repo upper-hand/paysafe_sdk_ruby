@@ -33,6 +33,7 @@ module Paysafe
       attr_accessor :error
       attr_accessor :links
       attr_accessor :storedCredential
+      attr_accessor :splitpay
 
       def self.get_pageable_array_key
         "auths"
