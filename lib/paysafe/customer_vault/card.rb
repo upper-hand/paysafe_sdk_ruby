@@ -12,6 +12,7 @@ module Paysafe
       attr_accessor :cardExpiry
       attr_accessor :cardType
       attr_accessor :billingAddressId
+      attr_accessor :billingAddress
       attr_accessor :defaultCardIndicator
       attr_accessor :paymentToken
       attr_accessor :error
