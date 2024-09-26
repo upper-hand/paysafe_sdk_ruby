@@ -19,6 +19,7 @@ module Paysafe
       attr_accessor :links
       attr_accessor :profileID
       attr_accessor :singleUseToken
+      attr_accessor :issuingCountry
     end
   end
 end
