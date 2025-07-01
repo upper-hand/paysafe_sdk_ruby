@@ -18,7 +18,6 @@
  DOC
 
 require 'net/https'
-require "resolv-replace.rb"
 require 'uri'
 require "base64"
 require 'yaml'
