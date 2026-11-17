@@ -114,7 +114,9 @@ module Paysafe
       begin
         response = http.request(net)
       rescue Net::OpenTimeout, Net::ReadTimeout => e
-        raise *get_paysafe_exception(504, "Paysafe request timed out (#{e.class})")
+        # Shaped like a Paysafe error body, since callers read message[:error][:code].
+        msg = "Paysafe request timed out (#{e.class})"
+        raise *get_paysafe_exception(504, msg, nil, {error: {code: "504", message: msg}})
       end
       response_code = response.code.to_i
 
