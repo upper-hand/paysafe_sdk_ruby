@@ -28,6 +28,13 @@ module Paysafe
     API_TEST = "https://api.test.paysafe.com"
     API_LIVE = "https://api.paysafe.com"
 
+    # Keep requests well under the app's request timeout; Net::HTTP defaults to 60s.
+    class << self
+      attr_accessor :open_timeout, :read_timeout
+    end
+    self.open_timeout = 5
+    self.read_timeout = 20
+
     # Merchant's api key
     @key_id = nil
 
@@ -83,6 +90,8 @@ module Paysafe
       http = Net::HTTP.new uri.host, uri.port
       #http.set_debug_output $stderr
       http.use_ssl = true
+      http.open_timeout = self.class.open_timeout
+      http.read_timeout = self.class.read_timeout
       http.verify_mode = OpenSSL::SSL::VERIFY_PEER
       http.cert_store = OpenSSL::X509::Store.new
       http.cert_store.set_default_paths
@@ -102,7 +111,13 @@ module Paysafe
       net["Authorization"] = "Basic " + Base64.strict_encode64(@key_id + ":" + @key_password)
       net["Content-Type"] = "application/json"
       net["SDK-Type"] = "Paysafe_Ruby_SDK"
-      response = http.request(net)
+      begin
+        response = http.request(net)
+      rescue Net::OpenTimeout, Net::ReadTimeout => e
+        # Shaped like a Paysafe error body, since callers read message[:error][:code].
+        msg = "Paysafe request timed out (#{e.class})"
+        raise *get_paysafe_exception(504, msg, nil, {error: {code: "504", message: msg}})
+      end
       response_code = response.code.to_i
 
       if request.data[:method] == Request::DELETE and response.body == ""
